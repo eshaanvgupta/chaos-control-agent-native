@@ -32,7 +32,7 @@ Judging: usefulness/execution 40%, creativity/design 20%, innovation 20%, Agent-
 
 - Creator/account: `eshaanvgupta`. Confirm the preferred public display name in the actual form.
 - Source: https://github.com/eshaanvgupta/chaos-control-agent-native
-- Demo: reproducible local app; no verified hosted PostgreSQL deployment is claimed.
+- Public browser demo: https://eshaanvgupta.github.io/chaos-control-agent-native/. It runs the real operational engine and UI with browser-local persistence. Use the full local app for the genuine native-agent segment; no hosted PostgreSQL deployment is claimed.
 - Public Clips link: **not recorded**. No Clips recording tool was available in this session.
 - Contact, eligibility and rules acceptance: the creator must supply/confirm these in the organizer's actual form; they have not been invented or submitted.
 

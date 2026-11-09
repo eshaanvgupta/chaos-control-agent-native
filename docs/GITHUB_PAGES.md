@@ -2,7 +2,7 @@
 
 The public browser edition uses the existing React screens, SVG network, TypeScript allocator, validation and CSV parser. It is a separately built static demo, not a claim that GitHub Pages hosts the native backend.
 
-- Intended address: https://eshaanvgupta.github.io/chaos-control-agent-native/
+- Verified live address: https://eshaanvgupta.github.io/chaos-control-agent-native/
 - Hosting source: the `gh-pages` branch, `/` folder, with `.nojekyll`.
 - Navigation: hash routes, so shared links and refresh work under the repository subpath without server rewrites.
 - Storage: per-browser IndexedDB. There is no shared account or remote database. Clearing site storage removes the local projects; export reports to retain a copy.
@@ -25,7 +25,7 @@ Preview: http://127.0.0.1:4173/chaos-control-agent-native/.
 pnpm exec playwright test --config playwright.pages.config.ts
 ```
 
-The Pages browser suite passed both the complete recovery/import journey and the persistence/reload check against the production static build. No backend was running for those tests. The full-app TypeScript compiler and Agent-Native doctor also passed after adding the browser edition.
+The Pages browser suite passed both the complete recovery/import journey and the persistence/reload check against the production static build. It was then rerun against the actual public GitHub Pages URL: **2 tests passed in 3.2 seconds**. GitHub reported the Pages build as `built` at commit `9df8ec9940ab02b9550a0cbd93029437b8a0a0d7`, and the public page returned HTTP 200. No app backend was running for those tests. Both the full-app and Pages TypeScript compiler checks and Agent-Native doctor passed after adding the browser edition.
 
 ## Publish
 
