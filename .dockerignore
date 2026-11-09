@@ -1,0 +1,12 @@
+node_modules
+.git
+.env
+.env.*
+data
+.output
+.generated
+.react-router
+test-results
+playwright-report
+.tmp
+*.log

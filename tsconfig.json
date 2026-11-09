@@ -1,6 +1,7 @@
 {
   "extends": "@agent-native/core/tsconfig.base.json",
   "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2023"],
     "ignoreDeprecations": "6.0",
     "rootDirs": [
       ".",

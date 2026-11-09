@@ -37,6 +37,7 @@ import { TAB_ID } from "@/lib/tab-id";
 import { i18nCatalog } from "./i18n";
 
 import stylesheet from "./global.css?url";
+import chaosStylesheet from './chaos.css?url';
 
 configureTracking({
   getDefaultProps: (_name, properties) => ({
@@ -48,6 +49,7 @@ configureTracking({
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
+  { rel: 'stylesheet', href: chaosStylesheet },
 ];
 
 const THEME_INIT_SCRIPT = getThemeInitScript();
@@ -60,7 +62,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, interactive-widget=resizes-content"
+          content="width=device-width, initial-scale=1, interactive-widget=resizes-content"
         />
         <script
           suppressHydrationWarning
@@ -184,10 +186,13 @@ export default function Root() {
     <AppToolkitProvider>
       <AppProviders
         queryClient={queryClient}
+        defaultTheme="dark"
+        isPublicPath={pathname === '/'}
+        skipFirstRunOnboarding
         skeletonLayout={skeletonLayoutForPath(pathname)}
         i18n={{ catalog: i18nCatalog }}
       >
-        <DbSyncSetup />
+        {pathname !== '/' && <DbSyncSetup />}
         <AppContent />
       </AppProviders>
     </AppToolkitProvider>

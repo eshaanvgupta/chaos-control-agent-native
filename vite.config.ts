@@ -8,6 +8,7 @@ const agentNativePlugins = agentNative as unknown as (
 ) => any[];
 export default defineConfig({
   optimizeDeps: {
+    include: ['papaparse'],
     entries: [
       "app/entry.client.tsx",
       "app/root.tsx",

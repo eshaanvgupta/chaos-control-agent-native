@@ -75,6 +75,9 @@ function EndVoiceChatOutsideChat() {
 }
 
 export function Layout({ children }: LayoutProps) {
+  const {pathname}=useLocation();
+  if(pathname==='/')return <>{children}</>;
+  if(pathname==='/control'||pathname==='/home')return <AgentInspector chatHomeHandoffActive={false} chatHomeHandoffPending={false}>{children}</AgentInspector>;
   return (
     <RealtimeVoiceModeProvider browserTabId={TAB_ID}>
       <EndVoiceChatOutsideChat />

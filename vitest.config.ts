@@ -10,6 +10,8 @@ export default defineConfig({
     },
   },
   test: {
+    include:['tests/**/*.test.ts'],
+    testTimeout:30000,
     env: { DATABASE_URL: "pglite:memory" },
     exclude: [
       "**/node_modules/**",

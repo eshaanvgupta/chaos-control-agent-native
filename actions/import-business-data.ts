@@ -1,0 +1,6 @@
+import { defineAction,fail } from '@agent-native/core/action';
+import { z } from 'zod';
+import { csvFields,importBundle,type CsvBundle } from '../lib/import';
+import { createWorkspace } from '../server/lib/operations';
+const table=z.object({csv:z.string().max(1_000_000).describe('CSV text, maximum 1 MB'),mapping:z.record(z.string(),z.string()).describe('Canonical field name to uploaded header')});
+export default defineAction({description:'Validate mapped business CSVs, preview the combined operational dataset, or import it into a new private workspace. No invented references; USD cents and day offsets required.',schema:z.object({name:z.string().min(1).max(120).describe('New workspace name'),tables:z.object({products:table,warehouses:table,inventory:table,suppliers:table,lanes:table,orders:table}).describe('Six related CSV tables'),commit:z.boolean().default(false).describe('false validates/previews, true creates a workspace')}),run:async({name,tables,commit},ctx)=>{let snapshot;try{snapshot=importBundle(tables as CsvBundle,name);}catch(e){fail(e instanceof Error?e.message:'Invalid import',{statusCode:400,errorCode:'invalid_import'});}return commit?{workspace:await createWorkspace('IMPORTED',ctx,snapshot),snapshot,fields:csvFields}:{snapshot,fields:csvFields};}});

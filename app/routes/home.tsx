@@ -1,4 +1,4 @@
-import HomePage from "@/components/home/HomePage";
+import Control from './control';
 import { APP_TITLE } from "@/lib/app-config";
 
 const SEO_TITLE = `${APP_TITLE} - Open Source AI app starter with actions`;
@@ -21,5 +21,5 @@ export function meta() {
 }
 
 export default function HomeRoute() {
-  return <HomePage />;
+  return <Control />;
 }

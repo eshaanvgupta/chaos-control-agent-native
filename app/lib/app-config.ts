@@ -1,5 +1,5 @@
 const rawAppName = "chaos-control-agent-native";
-const rawAppTitle = "Chaos Control Agent Native";
+const rawAppTitle = "CHAOS//CONTROL";
 
 const APP_NAME_PLACEHOLDER = "{" + "{APP_NAME}}";
 const APP_TITLE_PLACEHOLDER = "{" + "{APP_TITLE}}";

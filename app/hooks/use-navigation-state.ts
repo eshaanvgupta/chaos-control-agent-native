@@ -18,13 +18,16 @@ export interface NavigationState {
   path?: string;
   publicPath?: string;
   threadId?: string;
+  workspaceId?: string | undefined;
+  selectedNode?: string | undefined;
+  branchId?: string | undefined;
 }
 
 export function useNavigationState() {
   useAgentRouteState<NavigationState>({
     browserTabId: TAB_ID,
     requestSource: TAB_ID,
-    getNavigationState: ({ pathname }) => navigationStateForPath(pathname),
+    getNavigationState: ({ pathname, searchParams }) => ({...navigationStateForPath(pathname),...(pathname==='/control'||pathname==='/home'?{view:searchParams.get('view')??'overview',workspaceId:searchParams.get('id')??undefined,selectedNode:searchParams.get('node')??undefined,branchId:searchParams.get('branch')??undefined}:{} )}),
     getCommandPath: commandPathForNavigation,
   });
 }
@@ -73,6 +76,7 @@ export function navigationStateForPath(pathname: string): NavigationState {
 }
 
 function viewForPath(pathname: string): string {
+  if (pathname === '/control') return 'overview';
   if (isChatPathname(pathname)) return "chat";
   if (pathname === HOME_PATH) return "home";
   if (pathname.startsWith("/database")) return "database";
@@ -87,6 +91,7 @@ function viewForPath(pathname: string): string {
 }
 
 function pathForView(view?: string): string {
+  if(['control','overview','world','crisis','strategy','futures','data','reports','agent-console'].includes(view??''))return `/control?view=${view==='control'?'overview':view==='agent-console'?'agent':view}`;
   switch (view) {
     case "chat":
     case "ask":

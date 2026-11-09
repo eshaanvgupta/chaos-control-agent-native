@@ -1,0 +1,5 @@
+import { defineAction,fail } from '@agent-native/core/action';
+import { z } from 'zod';
+import { mutateSnapshot } from '../server/lib/operations';
+import { disrupt,incidentKinds } from '../lib/engine';
+export default defineAction({description:'Inject a real incident into the internal operational model. Never modifies external business systems. Pass the revision just read.',schema:z.object({id:z.string().uuid().describe('Workspace UUID'),expectedRevision:z.number().int().min(0).describe('Current revision'),kind:z.enum(incidentKinds).describe('Incident type'),target:z.string().max(80).describe('Supplier, warehouse, lane or zone ID; all for demand/cost'),value:z.number().min(0).max(1000).describe('Days for supplier delays; percentage for demand, stock damage and inflation')}),run:async({id,expectedRevision,kind,target,value},ctx)=>{try{return await mutateSnapshot(id,expectedRevision,ctx,'disruption',s=>disrupt(s,kind,target,value),{kind,target,value});}catch(e){if(e instanceof Error&&!(e as any).statusCode)fail(e.message,{statusCode:400,errorCode:'invalid_incident'});throw e;}}});

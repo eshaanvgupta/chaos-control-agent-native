@@ -1,0 +1,20 @@
+import { beforeAll,afterAll,describe,it,expect } from 'vitest';
+import { closeDbExec,withMigrationRuntime } from '@agent-native/core/db';
+import type { ActionRunContext } from '@agent-native/core/action';
+import migrations from '../server/db/migrations';
+import { createWorkspace,getState,generatePlans,approvePlan,executePlan,mutateSnapshot,undo,branch } from '../server/lib/operations';
+import { optionsSchema } from '../lib/model';
+import { disrupt } from '../lib/engine';
+import getAction from '../actions/get-operational-state';
+import applyAction from '../actions/apply-approved-plan';
+const human:ActionRunContext={userEmail:'commander@example.test',caller:'frontend'},agent:ActionRunContext={...human,caller:'tool'};
+beforeAll(async()=>{await withMigrationRuntime(()=>migrations({}));},60000);
+afterAll(async()=>{await closeDbExec();});
+describe('PostgreSQL persistence and shared action workflows',()=>{
+  it('persists a workspace and reads it through the real framework action',async()=>{const w=await createWorkspace('BLACKOUT',human),result=await getAction.run({id:w.id},human);expect(result.workspace.snapshot.orders).toHaveLength(240);expect(result.events[0]!.kind).toBe('created');});
+  it('requires identity and rejects cross-workspace reads',async()=>{await expect(createWorkspace('BLACKOUT')).rejects.toThrow();const w=await createWorkspace('BLACKOUT',human);await expect(getAction.run({id:w.id},{...human,userEmail:'intruder@example.test'})).rejects.toThrow(/not found|access denied/);});
+  it('rejects unapproved application and self-approval by an agent',async()=>{const w=await createWorkspace('BLACKOUT',human),plans=await generatePlans(w.id,human,optionsSchema.parse({}));await expect(applyAction.run({id:w.id,planId:plans[0]!.id},agent)).rejects.toThrow(/approval/);await expect(approvePlan(w.id,plans[0]!.id,true,agent)).rejects.toThrow(/human/i);});
+  it('approves, executes, verifies idempotency, audits and undoes internal changes',async()=>{const w=await createWorkspace('BLACKOUT',human),plans=await generatePlans(w.id,human,optionsSchema.parse({})),p=plans[1]!;await approvePlan(w.id,p.id,true,human);const r=await executePlan(w.id,p.id,agent);expect(r.applied).toBe(true);expect((await executePlan(w.id,p.id,agent)).idempotent).toBe(true);const state=await getState(w.id,human);expect(state.workspace.revision).toBe(1);expect(state.workspace.snapshot.day).toBe(14);expect(state.events.some(e=>e.kind==='approved')).toBe(true);expect(state.events.some(e=>e.kind==='plan-applied')).toBe(true);await undo(w.id,1,human);expect((await getState(w.id,human)).workspace.snapshot).toEqual(w.snapshot);});
+  it('rejects stale approvals after disruption and loses no concurrent mutation',async()=>{const w=await createWorkspace('BLACKOUT',human),plans=await generatePlans(w.id,human,optionsSchema.parse({}));await approvePlan(w.id,plans[0]!.id,true,human);const calls=await Promise.allSettled([mutateSnapshot(w.id,0,human,'disruption',s=>disrupt(s,'supplier-outage','SUP-1',7)),mutateSnapshot(w.id,0,human,'disruption',s=>disrupt(s,'demand-spike','all',20))]);expect(calls.filter(c=>c.status==='fulfilled')).toHaveLength(1);expect((await getState(w.id,human)).workspace.revision).toBe(1);await expect(executePlan(w.id,plans[0]!.id,agent)).rejects.toThrow(/stale/);});
+  it('keeps nested branches isolated and rejects foreign branch access',async()=>{const w=await createWorkspace('BLACKOUT',human),b=await branch(w.id,'What if',human,undefined,{kind:'supplier-outage',target:'SUP-1',value:7}),child=await branch(w.id,'Another week',human,b.id,{kind:'supplier-outage',target:'SUP-1',value:7});expect(child.snapshot.suppliers[0]!.leadDays).toBe(w.snapshot.suppliers[0]!.leadDays+14);expect((await getState(w.id,human)).workspace.snapshot).toEqual(w.snapshot);await expect(branch(w.id,'Forbidden',{...human,userEmail:'other@example.test'},b.id)).rejects.toThrow();});
+});
