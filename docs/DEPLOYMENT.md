@@ -1,5 +1,7 @@
 # Reproducible deployment
 
+The static browser edition is published separately through GitHub Pages; see [GITHUB_PAGES.md](GITHUB_PAGES.md). It reuses the real engine and UI with explicitly labeled browser-local storage. The requirements below apply to the full Agent-Native server deployment.
+
 Local: `pnpm install --frozen-lockfile`, then `pnpm dev`. The official framework opens port 8080 (or the next available port). Runtime data lives under ignored `data/pglite`; do not run two processes against the same local PGlite directory.
 
 Hosted production requires a persistent PostgreSQL URL and a stable `BETTER_AUTH_SECRET`. Agent-Native explicitly restricts local PGlite to local development. No usable hosted PostgreSQL credential was present in this session. A Sites frontend deployment alone would not satisfy the server/database contract; no disconnected shell has been published as a working app.

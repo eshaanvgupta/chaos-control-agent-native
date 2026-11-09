@@ -6,6 +6,10 @@ A playable operations digital twin built from the official **Agent-Native Chat s
 
 Repository: https://github.com/eshaanvgupta/chaos-control-agent-native
 
+**GitHub Pages browser demo:** https://eshaanvgupta.github.io/chaos-control-agent-native/
+
+The Pages edition runs the real simulation, import, branching, approval and reporting workflows locally with browser persistence. Native agent conversation and the shared server/database require the full app below. See [Pages deployment and limits](docs/GITHUB_PAGES.md).
+
 ![Command center](docs/screenshots/command-center.png)
 
 ## Run locally

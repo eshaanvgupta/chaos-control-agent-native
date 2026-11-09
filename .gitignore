@@ -43,4 +43,5 @@ learnings.md
 data/*.lock
 test-results/
 playwright-report/
+dist-pages/
 .openai/local*

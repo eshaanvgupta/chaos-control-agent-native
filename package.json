@@ -15,7 +15,10 @@
     "test": "vitest run",
     "agent-native:doctor": "agent-native doctor",
     "test:e2e": "playwright test",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "build:pages": "vite build --config pages/vite.config.ts",
+    "preview:pages": "vite preview --config pages/vite.config.ts",
+    "dev:pages": "vite --config pages/vite.config.ts"
   },
   "dependencies": {
     "@agent-native/agentkit": "0.226.0",
