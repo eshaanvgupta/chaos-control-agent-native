@@ -7,6 +7,7 @@ import {
 } from "@agent-native/toolkit/app/settings";
 
 import { APP_TITLE } from "@/lib/app-config";
+import {OllamaSetup} from '@/components/chaos/OllamaSetup';
 
 import changelog from "../../CHANGELOG.md?raw";
 
@@ -24,6 +25,7 @@ export default function SettingsRoute() {
     <SettingsTabsPage
       account={<AccountSettingsCard />}
       extraTabs={agentSettingsTabs}
+      appAreas={[{id:'ollama',label:'Local Ollama',content:<OllamaSetup/>,keywords:'ollama local model free ai offline'}]}
       whatsNewMarkdown={changelog}
     />
   );

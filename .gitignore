@@ -44,4 +44,5 @@ data/*.lock
 test-results/
 playwright-report/
 dist-pages/
+.runtime/
 .openai/local*

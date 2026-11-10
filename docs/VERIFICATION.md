@@ -2,6 +2,10 @@
 
 Executed locally on Windows with Node 24.16.0 and the official Agent-Native framework 0.226.0.
 
+Latest BYOK update (November 10, 2026): **32 unit/integration tests passed**, including five credential-transport tests and six Ollama helper tests. **4 Pages browser tests passed** against the production static build, including startup verification/model choice, analysis with actual mission context, no key/question in IndexedDB/localStorage/sessionStorage, disconnect, refresh, rejected-key redaction, cancellation, provider switching and mobile width. Model success responses in these browser tests are intercepted test fixtures, not evidence of a successful paid-provider generation. Real unmocked browser requests to both providers rejected an intentionally invalid key through the expected authentication error; their CORS preflights allowed the public-site origin and Authorization. Both TypeScript projects, Pages build, and Agent-Native doctor passed. Screenshot: `docs/screenshots/bring-your-own-key.png`.
+
+The results below describe the earlier full-app release, before session-only browser BYOK.
+
 - `pnpm test`: **21 tests passed** across deterministic engine/import tests and PostgreSQL/PGlite integration tests. Covers stock/supplier conservation, daily lane/warehouse capacity, storage, budget, arrival feasibility, outage impact, branch isolation, reproducibility, CSV validation, formula injection, identity, authorization, approval, idempotency, audit, undo and concurrent mutations.
 - `pnpm typecheck`: passed following implementation fixes. On the final Windows run the framework CLI wrapper hit a Node/libuv shutdown assertion; running the installed compiler directly, `node node_modules/typescript-7/bin/tsc --noEmit --project tsconfig.json`, passed with exit 0 on the final source.
 - `pnpm agent-native:doctor`: **clean, no findings**, including the final browser configuration.

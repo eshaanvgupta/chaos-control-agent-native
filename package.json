@@ -18,7 +18,12 @@
     "db:generate": "drizzle-kit generate",
     "build:pages": "vite build --config pages/vite.config.ts",
     "preview:pages": "vite preview --config pages/vite.config.ts",
-    "dev:pages": "vite --config pages/vite.config.ts"
+    "dev:pages": "vite --config pages/vite.config.ts",
+    "ollama:setup": "node scripts/ollama.mjs setup",
+    "ollama:doctor": "node scripts/ollama.mjs doctor",
+    "ollama:pull": "node scripts/ollama.mjs pull",
+    "ollama:serve": "node scripts/ollama.mjs serve",
+    "dev:ollama": "node scripts/ollama.mjs dev"
   },
   "dependencies": {
     "@agent-native/agentkit": "0.226.0",
